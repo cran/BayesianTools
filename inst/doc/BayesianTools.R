@@ -148,18 +148,23 @@ applySettingsDefault(sampler = "Metropolis")
 #  plot(out)
 
 ## ---- results = 'hide', eval = F-----------------------------------------
+#  settings <- list(iterations = iter, adapt = F, DRlevels = 2, gibbsProbabilities = NULL, temperingFunction = NULL, optimize = T,  message = FALSE)
+#  out <- runMCMC(bayesianSetup = bayesianSetup, sampler = "Metropolis", settings = settings)
+#  plot(out)
+
+## ---- results = 'hide', eval = F-----------------------------------------
 #  settings <- list(iterations = iter, adapt = T, DRlevels = 2, gibbsProbabilities = NULL, temperingFunction = NULL, optimize = T,  message = FALSE)
 #  out <- runMCMC(bayesianSetup = bayesianSetup, sampler = "Metropolis", settings = settings)
 #  plot(out)
 
 ## ---- results = 'hide', eval = F-----------------------------------------
-#  settings <- list(iterations = iter, adapt = T, DRlevels = 1, gibbsProbabilities = c(1,1,0), temperingFunction = NULL, optimize = T,  message = FALSE)
+#  settings <- list(iterations = iter, adapt = T, DRlevels = 1, gibbsProbabilities = c(1,0.5,0), temperingFunction = NULL, optimize = T,  message = FALSE)
 #  out <- runMCMC(bayesianSetup = bayesianSetup, sampler = "Metropolis", settings = settings)
 #  plot(out)
 
 ## ---- results = 'hide', eval = F-----------------------------------------
 #  temperingFunction <- function(x) 5 * exp(-0.01*x) + 1
-#  settings <- list(iterations = iter, adapt = T, DRlevels = 1, gibbsProbabilities = c(1,1,0), temperingFunction = temperingFunction, optimize = T,  message = FALSE)
+#  settings <- list(iterations = iter, adapt = F, DRlevels = 1, gibbsProbabilities = c(1,1,0), temperingFunction = temperingFunction, optimize = T,  message = FALSE)
 #  out <- runMCMC(bayesianSetup = bayesianSetup, sampler = "Metropolis", settings = settings)
 #  plot(out)
 

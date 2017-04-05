@@ -1,18 +1,11 @@
 #' Very simple ecosystem model
 #' @description A very simple ecosystem model, based on three carbon pools and a basic LUE model 
-#' @param pars a parameter vector
-#' @param PAR Photosynthetically active radiation (PAR) MJ /m2 /day
-#' @param KEXT Light extinction coefficient m2 ground area / m2 leaf area 
-#' @param LAR Leaf area ratio m2 leaf area / kg aboveground vegetation
-#' @param LUE Light-Use Efficiency (kg C MJ-1 PAR)
-#' @param GAMMA Autotrophic respiration as a fraction of GPP
-#' @param tauV Longevity of aboveground vegetation days
-#' @param tauR Longevity of belowground vegetation days
-#' @param tauS   Residence time of soil organic matter d
+#' @param pars a parameter vector with parameters and initial states
+#' @param PAR Forcing, photosynthetically active radiation (PAR) MJ /m2 /day
 #' @param C switch to choose whether to use the C or R version of the model. C is much faster. 
 #' @return a matrix with colums NEE, CV, CR and CS units and explanations see details
 #' @import Rcpp
-#' @useDynLib BayesianTools
+#' @useDynLib BayesianTools, .registration = TRUE
 #' @details This Very Simple Ecosystem Model (VSEM) is a 'toy' model designed to be very simple but yet bear some resemblance to deterministic processed based ecosystem models (PBMs) that are commonly used in forest modelling.
 #' 
 #' The model determines the accumulation of carbon in the plant and soil from the growth of the plant via photosynthesis and senescence to the soil which respires carbon back to the atmosphere.
@@ -72,6 +65,7 @@
 #' 
 #' NEE   Net Ecosystem Exchange kg C /m2 /day
 #' @seealso \code{\link{VSEMgetDefaults}}, \code{\link{VSEMcreatePAR}}, , \code{\link{VSEMcreateLikelihood}} 
+#' @example /inst/examples/VSEM.R
 #' @export
 #' @author David Cameron, R and C implementation by Florian Hartig
 VSEM <- function(pars =  c(KEXT = 0.5,
