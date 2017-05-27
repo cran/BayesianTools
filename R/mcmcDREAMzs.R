@@ -1,6 +1,7 @@
 ### DREAMzs algorithm
 
 ##' DREAMzs
+##' @author Stefan Paul
 ##' @param bayesianSetup Object of class 'bayesianSetup' or 'bayesianOuput'.
 ##' @param settings list with parameter values
 ##' @param iterations Number of model evaluations
@@ -158,6 +159,7 @@ DREAMzs <- function(bayesianSetup,   settings = list(
   
   # Determine number of iterations and initialize chain
   n.iter <- ceiling(settings$iterations/Npop)
+  settings$burnin <- settings$burnin/Npop
   lChain <- ceiling((n.iter - settings$burnin)/settings$thin)+1
   pChain <- array(NA, dim=c(lChain, Npar+3, Npop))
 

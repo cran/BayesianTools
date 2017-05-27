@@ -2,6 +2,7 @@
 
 
 #' Extracts the sample from a bayesianOutput
+#' @author Florian Hartig
 #' @param sampler an object of class mcmcSampler, mcmcSamplerList, smcSampler, smcSamplerList
 #' @param parametersOnly if F, likelihood, posterior and prior values are also provided in the output
 #' @param coda works only for mcmc classes - provides output as a coda object. Note: if mcmcSamplerList contains mcmc samplers such as DE that have several chains, the internal chains will be collapsed. This may not be the desired behavior for all applications. 
@@ -12,6 +13,7 @@
 #' @param whichParameters possibility to select parameters by index
 #' @param reportDiagnostics logical, determines whether settings should be included in the output
 #' @param ... further arguments
+#' @example /inst/examples/getSampleHelp.R
 #' @export
 getSample <- function(sampler, parametersOnly = T, coda = F, start = 1, end = NULL, thin = 1, numSamples = NULL, whichParameters = NULL, reportDiagnostics = FALSE, ...) UseMethod("getSample")
 

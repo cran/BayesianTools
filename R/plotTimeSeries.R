@@ -12,10 +12,11 @@
 #'          \code{\link{marginalPlot}} \cr
 #'          \code{\link{tracePlot}} \cr
 #'          \code{\link{correlationPlot}}
+#' @example /inst/examples/plotTimeSeriesHelp.R
 #' @export
 plotTimeSeries <- function(observed = NULL, predicted = NULL, x = NULL, confidenceBand = NULL, predictionBand = NULL, xlab = "Time", ylab = "Observed / predicted values", ...){
   
-  ylim = range(observed, predicted, confidenceBand, predictionBand,na.rm=T)
+  ylim = range(observed, predicted, confidenceBand, predictionBand,na.rm=TRUE)
   
   if (is.null(x)){
     if(!is.null(observed)) x = 1:length(observed)
@@ -63,16 +64,30 @@ plotTimeSeriesResiduals <- function(residuals, x = NULL, main = "residuals"){
 #' @param error function with signature f(mean, par) that generates error expectations from mean model predictions. Par is a vector from the matrix with the parameter samples (full length). f needs to know which of these parameters are parameters of the error function
 #' @param start numeric start value for the plot (see \code{\link{getSample}})
 #' @param plotResiduals logical determining whether residuals should be plotted
+#' @param prior if a prior sampler is implemented, setting this parameter to TRUE will draw model parameters from the prior instead of the posterior distribution
+#' @param ... further arguments passed to \code{\link[graphics]{plot}}
 #' @export
-plotTimeSeriesResults <- function(sampler, model, observed, error = NULL, plotResiduals = T, start = 1){
+plotTimeSeriesResults <- function(sampler, model, observed, error = NULL, plotResiduals = TRUE, start = 1, prior = FALSE, ...){
   
-  if(inherits(sampler,"bayesianOutput")) parMatrix = getSample(sampler, start = start)
-  else if (class(sampler) == "matrix") parMatrix = sampler
-  else stop("wrong type give to variable sampler")
+  if(prior == FALSE){
+    if(inherits(sampler,"bayesianOutput")) parMatrix = getSample(sampler, start = start)
+    else if (class(sampler) == "matrix") parMatrix = sampler
+    else stop("wrong type give to variable sampler")    
+  }else if (prior == TRUE){
+    if(class(sampler)[1] == "mcmcSamplerList") parMatrix = sampler[[1]]$setup$prior$sampler(1000)
+    else parMatrix = sampler$setup$prior$sampler(1000)
+  }else stop("BayesianTools::plotTimeSeriesResults - wrong argument to prior")
+
+  thin = min(1000, nrow(parMatrix))
   
-  pred <- getPredictiveIntervals(parMatrix = parMatrix, model = model, thin = 1000, quantiles = c(0.025, 0.5, 0.975), error = error)
+  pred <- getPredictiveIntervals(parMatrix = parMatrix, model = model, thin = thin, quantiles = c(0.025, 0.5, 0.975), error = error)
   
-  plotTimeSeries(observed = observed, predicted = pred[2,], confidenceBand = pred[c(1,3),], predictionBand = pred[c(4,6),] )
+  if(!is.null(error)) plotTimeSeries(observed = observed, predicted = pred[2,], confidenceBand = pred[c(1,3),], predictionBand = pred[c(4,6),], ...)
+  else plotTimeSeries(observed = observed, predicted = pred[2,], confidenceBand = pred[c(1,3),], ...)
+  
+  
+  # TODO - plotResiduals needs to be implemented
+  
 }
 
 

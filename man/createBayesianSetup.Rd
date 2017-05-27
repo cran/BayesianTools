@@ -12,9 +12,9 @@ createBayesianSetup(likelihood, prior = NULL, priorSampler = NULL,
 \arguments{
 \item{likelihood}{log likelihood density function}
 
-\item{prior}{log prior density}
+\item{prior}{either a prior class (see \code{\link{createPrior}}) or a log prior density}
 
-\item{priorSampler}{prior sampling function}
+\item{priorSampler}{if a prior density (and not a prior class) is provided to prior, the optional prior sampling function can be provided here}
 
 \item{parallel}{parallelization option. Default is F. Other options are T, or "external". See details.}
 
@@ -34,6 +34,8 @@ createBayesianSetup(likelihood, prior = NULL, priorSampler = NULL,
 Creates a standardized collection of prior, likelihood and posterior functions, including error checks etc.
 }
 \details{
+If lower and upper (and optionally best) but not a prior object are passed, the function will create an uniform prior with the limits lower and upper. If a prior object and lower and upper are passed, the function will ignore lower and upper, and will only use the prior object.
+
 For parallelization, option T means that an automatic parallelization via R is attempted, or "external", in which case it is assumed that the likelihood is already parallelized. In this case it needs to accept a matrix with parameters as columns.
 Further you can specify the packages, objects and DLLs that are exported to the cluster. 
 By default a copy of your workspace is exported. However, depending on your workspace this can be very inefficient.
@@ -79,13 +81,13 @@ parSel = c(1:6, 12)
 
 
 ## Builidng the likelihood function
-likelihood <- function(x, sum = TRUE){
-  parSel = c(1:6, 12)
-  x = createMixWithDefaults(x, refPars$best, parSel)
+likelihood <- function(par, sum = TRUE){
+  x = refPars$best
+  x[parSel] = par
   predicted <- VSEM(x[1:11], PAR)
   diff = c(predicted[,1:3] - obs[,1:3])
   llValues = dnorm(diff, sd = max(abs(c(predicted[,1:3])),0.0001) * x[12], log = TRUE) 
-  if (sum == F) return(llValues)
+  if (sum == False) return(llValues)
   else return(sum(llValues))
 }
 
@@ -117,4 +119,7 @@ rm(BSVSEM)
 \code{\link{checkBayesianSetup}} \cr
          \code{\link{createLikelihood}} \cr
          \code{\link{createPrior}} \cr
+}
+\author{
+Florian Hartig
 }

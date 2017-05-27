@@ -1,6 +1,7 @@
 #TODO: long-term - consider combinining DE and DE.ZS
 
 #' Differential-Evolution MCMC zs
+#' @author Francesco Minunno and Stefan Paul
 #' @param bayesianSetup a BayesianSetup with the posterior density function to be sampled from
 #' @param settings list with parameter settings
 #' @param startValue (optional) eiter a matrix with start population, a number to define the number of chains that are run or a function that samples a starting population.
@@ -160,7 +161,6 @@ DEzs <- function(bayesianSetup,
   # Initialize parameter values. Because they are called in
   # the loop this saves time in comparison to referencing them 
   # every iteration using settings$...
-  burnin <- settings$burnin
   iterations <- settings$iterations
   consoleUpdates <- settings$currentChain
   currentChain <- settings$currentChain
@@ -187,7 +187,7 @@ DEzs <- function(bayesianSetup,
   
   #if(burnin != 0) stop("burnin option is currently not implemented")
   
-  burnin <- settings$burnin
+  burnin <- settings$burnin/Npop
   n.iter <- ceiling(settings$iterations/Npop)
   
   lChain <- ceiling((n.iter - burnin)/settings$thin)+1

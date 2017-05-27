@@ -50,7 +50,7 @@ prior <- createPrior(density = density, sampler = sampler,
 
 # Use this prior in an MCMC 
 
-ll <- function(x) sum(dnorm(x, log = T)) # multivariate normal ll
+ll <- function(x) sum(dnorm(x, log = TRUE)) # multivariate normal ll
 bayesianSetup <- createBayesianSetup(likelihood = ll, prior = prior)
 
 settings = list(iterations = 1000)
@@ -65,4 +65,7 @@ out <- runMCMC(bayesianSetup = bayesianSetup, settings = settings)
          \code{\link{createUniformPrior}} \cr
          \code{\link{createTruncatedNormalPrior}}\cr
          \code{\link{createBayesianSetup}}\cr
+}
+\author{
+Florian Hartig
 }

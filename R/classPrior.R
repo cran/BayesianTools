@@ -1,4 +1,5 @@
 #' Creates a standardized prior class
+#' @author Florian Hartig
 #' @param density Prior density
 #' @param sampler Sampling function for density (optional)
 #' @param lower vector with lower bounds of parameters
@@ -87,12 +88,13 @@ createPrior <- function(density = NULL, sampler = NULL, lower = NULL, upper = NU
 
 
 #' Convenience function to create a simple uniform prior distribution
+#' @author Florian Hartig
 #' @param lower vector of lower prior range for all parameters
 #' @param upper vector of upper prior range for all parameters
 #' @param best vector with "best" values for all parameters
 #' @note for details see \code{\link{createPrior}}
 #' @seealso \code{\link{createPriorDensity}}, \code{\link{createPrior}}, \code{\link{createBetaPrior}}, \code{\link{createTruncatedNormalPrior}}, \code{\link{createBayesianSetup}} 
-#' @example /inst/examples/createUniformPrior.R
+#' @example /inst/examples/createUniformPriorHelp.R
 #' @export
 createUniformPrior<- function(lower, upper, best = NULL){
   len = length(lower)
@@ -100,7 +102,7 @@ createUniformPrior<- function(lower, upper, best = NULL){
     if (length(x) != len) stop("parameter vector does not match prior")
     else return(sum(dunif(x, min = lower, max = upper, log = T)))
   }
-  sampler <- function() runif(length(lower), lower, upper)
+  sampler <- function() runif(len, lower, upper)
   
   out <- createPrior(density = density, sampler = sampler, lower = lower, upper = upper, best = best)
   return(out)
@@ -108,7 +110,7 @@ createUniformPrior<- function(lower, upper, best = NULL){
 
 
 #' Convenience function to create a truncated normal prior
-#' 
+#' @author Florian Hartig
 #' @param mean best estimate for each parameter
 #' @param sd sdandard deviation
 #' @param lower vector of lower prior range for all parameters
@@ -137,7 +139,7 @@ createTruncatedNormalPrior<- function(mean, sd, lower, upper){
 
 
 #' Convenience function to create a beta prior
-#' 
+#' @author Florian Hartig
 #' @param a shape1 of the beta distribution 
 #' @param b shape2 of the beta distribution 
 #' @param upper upper values for the parameters
@@ -151,7 +153,7 @@ createTruncatedNormalPrior<- function(mean, sd, lower, upper){
 #'          \code{\link{createBayesianSetup}} \cr
 #' @export
 createBetaPrior<- function(a, b, lower=0, upper=1){
-  len = length(a)
+  len = length(lower)
   if (! any(upper > lower)) stop("wrong values in beta prior")
   range = upper - lower
   density <- function(x){
@@ -164,12 +166,13 @@ createBetaPrior<- function(a, b, lower=0, upper=1){
     out = (out * range) + lower
     return(out)
   }
-  out <- createPrior(density = density, sampler = sampler, lower = NULL, upper = NULL)
+  out <- createPrior(density = density, sampler = sampler, lower = lower, upper = upper)
   return(out)
 }
 
 
 #' Fits a density function to a multivariate sample
+#' @author Florian Hartig
 #' @export
 #' @param sampler an object of class BayesianOutput or a matrix 
 #' @param method method to generate prior - default and currently only option is multivariate

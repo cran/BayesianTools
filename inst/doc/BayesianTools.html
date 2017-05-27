@@ -11,7 +11,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<meta name="date" content="2016-01-10" />
 
 <title>Bayesian Tools</title>
 
@@ -78,7 +77,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">Bayesian Tools</h1>
-<h4 class="date"><em>10 Jan 2016</em></h4>
 <div class="abstract">
 <p class="abstract">Abstract</p>
 <p>The BayesianTools (BT) package supports model analysis (including sensitivity analysis and uncertainty analysis), Bayesian model calibration, as well as model selection and multi-model inference techniques for system models.</p>
@@ -135,7 +133,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## 
 ##   Florian Hartig, Francesco Minunno and Stefan Paul (2017).
 ##   BayesianTools: General-Purpose MCMC and SMC Samplers and Tools
-##   for Bayesian Statistics. R package version 0.1.1.
+##   for Bayesian Statistics. R package version 0.1.2.
 ##   https://github.com/florianhartig/BayesianTools
 ## 
 ## A BibTeX entry for LaTeX users is
@@ -144,7 +142,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ##     title = {BayesianTools: General-Purpose MCMC and SMC Samplers and Tools for Bayesian Statistics},
 ##     author = {Florian Hartig and Francesco Minunno and Stefan { Paul}},
 ##     year = {2017},
-##     note = {R package version 0.1.1},
+##     note = {R package version 0.1.2},
 ##     url = {https://github.com/florianhartig/BayesianTools},
 ##   }</code></pre>
 <p>Pro-tip: if you are running a stochastic algorithms such as an MCMC, you should always set or record your random seed to make your results reproducible (otherwise, results will change slightly every time you run the code)</p>
@@ -193,7 +191,7 @@ out &lt;-<span class="st"> </span><span class="kw">runMCMC</span>(<span class="d
 ## # Iterations per chain:  10000 
 ## # Rejection rate:  0.686 
 ## # Effective sample size:  932 
-## # Runtime:  3.378  sec. 
+## # Runtime:  3.671  sec. 
 ##  
 ## # Parameter       MAP      2.5%    median   97.5% 
 ## #  par 1 :        0.001   -1.981    0.022    2.050 
@@ -280,7 +278,7 @@ out &lt;-<span class="st"> </span><span class="kw">runMCMC</span>(<span class="d
 ## # Iterations per chain:  1000 
 ## # Rejection rate:  0.668 
 ## # Effective sample size:  291 
-## # Runtime:  0.943  sec. 
+## # Runtime:  1.029  sec. 
 ##  
 ## # Parameter       MAP      2.5%    median   97.5% 
 ## #  par 1 :       0.000   -1.829    0.074    1.883 
@@ -535,7 +533,7 @@ newPriorFromPosterior &lt;-<span class="st"> </span><span class="kw">createPrior
 ## $sessionInfo
 ## R version 3.3.2 (2016-10-31)
 ## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-## Running under: macOS Sierra 10.12.3
+## Running under: macOS Sierra 10.12.5
 ## 
 ## locale:
 ## [1] C/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -544,7 +542,7 @@ newPriorFromPosterior &lt;-<span class="st"> </span><span class="kw">createPrior
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] sm_2.2-5.4          BayesianTools_0.1.1
+## [1] sm_2.2-5.4          BayesianTools_0.1.2
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] Rcpp_0.12.9       lattice_0.20-34   mvtnorm_1.0-6    
