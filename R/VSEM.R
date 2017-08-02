@@ -65,7 +65,7 @@
 #' 
 #' NEE   Net Ecosystem Exchange kg C /m2 /day
 #' @seealso \code{\link{VSEMgetDefaults}}, \code{\link{VSEMcreatePAR}}, , \code{\link{VSEMcreateLikelihood}} 
-#' @example /inst/examples/VSEM.R
+#' @example /inst/examples/VSEMHelp.R
 #' @export
 #' @author David Cameron, R and C implementation by Florian Hartig
 VSEM <- function(pars =  c(KEXT = 0.5,
@@ -143,8 +143,11 @@ VSEMgetDefaults <- function(){
 #' @param pars vector with new parameter values
 #' @param defaults vector with defaukt parameter values
 #' @param locations indices of the new parameter values
+#' @rdname package-deprecated
+#' @description This function is deprecated and will be removed by v0.2. 
 #' @export
 createMixWithDefaults <- function(pars, defaults, locations){
+  .Deprecated(package = "BayesianTools")
   out = defaults
   out[locations] = pars
   return(out)
@@ -196,11 +199,13 @@ VSEMcreateLikelihood <- function(likelihoodOnly = F, plot = F, selection =  c(1:
   # Create likelihood for reference data
   
   likelihood <- function(x){
-    x <- createMixWithDefaults(x, refPars$best, selection)
-    predicted <- VSEM(x[1:11], PAR)
+    mix = refPars$best
+    mix[selection] = x
+    
+    predicted <- VSEM(mix[1:11], PAR)
     predicted[,1] <- predicted[,1]
     diff <- c(predicted[,1:3] - obs[,1:3])
-    llValues <- dnorm(diff, sd = (abs(c(predicted[,1:3])) + 0.0000001) * x[12], log = T) 
+    llValues <- dnorm(diff, sd = (abs(c(predicted[,1:3])) + 0.0000001) * mix[12], log = T) 
     if (sum == FALSE) return(llValues)
     else return(sum(llValues))
   }

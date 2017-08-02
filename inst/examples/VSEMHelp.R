@@ -57,6 +57,7 @@ out <- runMCMC(bayesianSetup = bayesianSetup, sampler = "DEzs", settings = setti
 
 plot(out)
 summary(out)
+marginalPlot(out, scale = T)
 gelmanDiagnostics(out) # should be below 1.05 for all parameters to demonstrate convergence 
 
 # Posterior predictive simulations
@@ -83,5 +84,58 @@ plotTimeSeriesResults(sampler = out, model = createPredictions, observed = refer
 plotTimeSeriesResults(sampler = out, model = createPredictions, observed = referenceData[,1],
                       error = createError, main = "Posterior predictive")
 
+
+########################################################
+# Demonstrating the updating of the prior from old posterior
+# Note that it is usually more exact to rerun the MCMC 
+# with all (old and new) data, instead of updating the prior
+# because likely some information is lost when approximating the
+# Posterior by a multivariate normal 
+
+settings <- list(iterations = 5000, nrChains = 2)
+
+out <- runMCMC(bayesianSetup = bayesianSetup, sampler = "DEzs", settings = settings)
+
+plot(out)
+correlationPlot(out, start = 1000)
+
+newPrior = createPriorDensity(out, method = "multivariate",
+                              eps = 1e-10,
+                              lower = refPars$lower[parSel],
+                              upper = refPars$upper[parSel], start= 1000)
+
+bayesianSetup <- createBayesianSetup(likelihood = likelihood,
+                                     prior = newPrior,
+                                     names = rownames(refPars)[parSel] )
+
+# check boundaries are correct set
+bayesianSetup$prior$sampler() < refPars$lower[parSel]
+bayesianSetup$prior$sampler() > refPars$upper[parSel]
+
+# check prior looks similar to posterior
+x = bayesianSetup$prior$sampler(2000)
+correlationPlot(x, thin = F)
+
+out <- runMCMC(bayesianSetup = bayesianSetup, sampler = "DEzs", settings = settings)
+
+plot(out)
+correlationPlot(out)
+
+plotTimeSeriesResults(sampler = out,
+                      model = createPredictions,
+                      observed = referenceData[,1],
+                      error = createError,
+                      prior = F, main = "Posterior predictive")
+
+plotTimeSeriesResults(sampler = out,
+                      model = createPredictions,
+                      observed = referenceData[,1],
+                      error = createError,
+                      prior = T, main = "Prior predictive")
+
+
+
+
 }
 
+par(oldpar)
