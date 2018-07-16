@@ -2,7 +2,7 @@
 #' @author Florian Hartig
 #' @param bayesianSetup either one of a) an object of class BayesianSetup with prior and likelihood function (recommended, see \code{\link{createBayesianSetup}}), b) a log posterior or other target function, or c) an object of class BayesianOutput created by runMCMC. The latter allows to continue a previous MCMC run. See details for further details. 
 #' @param sampler sampling algorithm to be run. Default is DEzs. Options are "Metropolis", "AM", "DR", "DRAM", "DE", "DEzs", "DREAM", "DREAMzs", "SMC". For details see the help of the individual functions. 
-#' @param settings list with settings for each sampler (see help of sampler for details). If a setting is not provided, defaults (see \code{\link{applySettingsDefault}}) will be used. 
+#' @param settings list with settings for each sampler (see help of sampler for details). If a setting is not provided, defaults (see \code{\link{applySettingsDefault}}) will be used. You can see the default values by running \code{\link{applySettingsDefault}} with the respective sampler name, or in the help of the samplers. 
 #' @details The runMCMC function can be started with either one of a) an object of class BayesianSetup with prior and likelihood function (recommended, see \code{\link{createBayesianSetup}}), b) a log posterior or other target function, or c) an object of class BayesianOutput created by runMCMC. The latter allows to continue a previous MCMC run. If a bayesianSetup is provided, check if appropriate parallization options are used - many samplers can make use of parallelization if this option is activated when the class is created.
 #' 
 #' For details about the different MCMC samplers, make sure you have read the Vignette (run vignette("BayesianTools", package="BayesianTools"). Also, see \code{\link{Metropolis}} for Metropolis based samplers, \code{\link{DE}} and \code{\link{DEzs}} for standard differential evolution samplers, \code{\link{DREAM}} and \code{\link{DREAMzs}} for DREAM sampler, \code{\link{Twalk}} for the Twalk sampler, and \code{\link{smcSampler}} for rejection and Sequential Monte Carlo sampling.\cr
@@ -16,7 +16,7 @@
 #' 
 #' Note that DE and DREAM variants as well as SMC and T-walk require a population to start, which should be provided as a matrix. Default (NULL) sets the population size for DE to 3 x dimensions of parameters, for DREAM to 2 x dimensions of parameters and for DEzs and DREAMzs to three, sampled from the prior. Note also that the zs variants of DE and DREAM require two populations, the current population and the z matrix (a kind of memory) - if you want to set both, provide a list with startvalue$X and startvalue$Z. 
 #' 
-#' Startvalues for sampling with nrChains > 1 : if you want to provide different start values for the different chains, provide them as a list
+#' setting startValue for sampling with nrChains > 1 : if you want to provide different start values for the different chains, provide them as a list
 #' 
 #' @return The function returns an object of class mcmcSampler (if one chain is run) or mcmcSamplerList. Both have the superclass bayesianOutput. It is possible to extract the samples as a coda object or matrix with \code{\link{getSample}}. 
 #' It is also possible to summarize the posterior as a new prior via \code{\link{createPriorDensity}}.
@@ -43,20 +43,30 @@ runMCMC <- function(bayesianSetup , sampler = "DEzs", settings = NULL){
       if(is.null(settings)) settings <- previousMcmcSampler$settings
       setup <- previousMcmcSampler$setup
       sampler <- previousMcmcSampler$settings$sampler
+      previousSettings <- previousMcmcSampler$settings
     } else{ 
       if(is.null(settings)) settings <- previousMcmcSampler[[1]]$settings
       settings$nrChains <- length(previousMcmcSampler)
       setup <- previousMcmcSampler[[1]]$setup
       sampler <- previousMcmcSampler[[1]]$settings$sampler
+      previousSettings <- previousMcmcSampler[[1]]$settings
     }
     
     # Set settings$sampler (only needed if new settings are supplied)
     settings$sampler <- sampler
     
-    settings <- applySettingsDefault(settings = settings, sampler = settings$sampler, check = TRUE)
+    # overwrite new settings
+    for(name in names(settings)) previousSettings[[name]] <- settings[[name]]
+    
+    settings <- previousSettings
+    
+    # Check if previous settings will be new default
+    
+    previousMcmcSampler$settings <- applySettingsDefault(settings = settings, sampler = settings$sampler, check = TRUE)
     
     restart <- TRUE
 
+    
   ## NOT RESTART STARTS HERE ###################
     
   }else{
@@ -107,12 +117,16 @@ runMCMC <- function(bayesianSetup , sampler = "DEzs", settings = NULL){
   # MAIN RUN FUNCTION HERE  
   }else{
     
+    # check start values 
+    setup$prior$checkStart(settings$startValue)
+    
+    
     if (sampler == "Metropolis" || sampler == "AM" || sampler == "DR" || sampler == "DRAM"){
       if(restart == FALSE){
         mcmcSampler <- Metropolis(bayesianSetup = setup, settings = settings)
         mcmcSampler <- sampleMetropolis(mcmcSampler = mcmcSampler, iterations = settings$iterations)
       } else {
-        mcmcSampler<- sampleMetropolis(mcmcSampler = previousMcmcSampler, iterations = settings$iterations) 
+        mcmcSampler <- sampleMetropolis(mcmcSampler = previousMcmcSampler, iterations = settings$iterations) 
       }
     }
     
@@ -139,6 +153,8 @@ runMCMC <- function(bayesianSetup , sampler = "DEzs", settings = NULL){
     
     ############## Differential Evolution with snooker update
     if (sampler == "DEzs"){
+      # check z matrix
+      if(!is.null(settings$Z)) setup$prior$checkStart(settings$Z,z = TRUE)
       
       if(restart == F) out <- DEzs(bayesianSetup = setup, settings = settings)
       else out <- DEzs(bayesianSetup = previousMcmcSampler, settings = settings)
@@ -174,6 +190,8 @@ runMCMC <- function(bayesianSetup , sampler = "DEzs", settings = NULL){
     
     ############## DREAMzs   
     if (sampler == "DREAMzs"){
+        # check z matrix
+        if(!is.null(settings$Z)) setup$prior$checkStart(settings$Z,z = TRUE)
       
         if(restart == F) out <- DREAMzs(bayesianSetup = setup, settings = settings)
         else out <- DREAMzs(bayesianSetup = previousMcmcSampler, settings = settings)
@@ -460,7 +478,7 @@ applySettingsDefault<-function(settings=NULL, sampler = "DEzs", check = FALSE){
 #' @param proposalGenerator proposal generator
 #' @param bayesianSetup either an object of class bayesianSetup created by \code{\link{createBayesianSetup}} (recommended), or a log target function 
 #' @param settings list with settings
-
+#' @keywords internal
 setupStartProposal <- function(proposalGenerator = NULL, bayesianSetup, settings){
   
   # Proposal
@@ -540,6 +558,7 @@ getPossibleSamplerTypes <- function(){
 
 #' Returns Metropolis default settings
 #' @author Tankred Ott
+#' @keywords internal
 getMetropolisDefaultSettings <- function () {
   defaultSettings = list(
     startValue = NULL,

@@ -33,7 +33,7 @@ summary(out)
 ## ------------------------------------------------------------------------
 plot(out) # plot internally calls tracePlot(out)
 correlationPlot(out)
-marginalPlot(out)
+marginalPlot(out, prior = TRUE)
 
 ## ------------------------------------------------------------------------
 marginalLikelihood(out)
@@ -75,10 +75,83 @@ bayesianSetup = createBayesianSetup(likelihood = ll, lower = rep(-10, 3), upper 
 #  }
 #  
 #  ## Create Bayesian Setup
-#  BS <- createBayesianSetup(likelihood, parallel = "external" ...)
+#  BS <- createBayesianSetup(likelihood, parallel = "external", ...)
 #  
 #  ## Run MCMC
 #  runMCMC(BS, sampler = "SMC", ...)
+
+## ---- eval = FALSE-------------------------------------------------------
+#  ## n = Number of cores
+#  x <- c(1:10)
+#  likelihood <- function(param) return(sum(dnorm(x, mean = param, log = T)))
+#  bayesianSetup <- createBayesianSetup(likelihood, parallel = n, lower = -5, upper = 5)
+#  
+#  ## give runMCMC a matrix with n rows of proposals as startValues or sample n times from the previous created sampler
+#  out <- runMCMC(bayesianSetup, settings = list(iterations = 100000, startValues = bayesianSetup$prior$sampler(n)))
+#  
+
+## ---- eval = FALSE-------------------------------------------------------
+#  ### Create cluster with n cores
+#  cl <- parallel::makeCluster(n)
+#  
+#  ## Definition of the likelihood
+#  likelihood  <- function(X) sum(dnorm(c(1:10), mean = X, log = T))
+#  
+#  ## Definition of the likelihood which will be calculated in parallel. Instead of the parApply function, we could also define a costly parallelized likelihood
+#  pLikelihood <- function(param) parallel::parApply(cl = cl, X = param, MARGIN = 1, FUN = likelihood)
+#  
+#  ## export functions, dlls, libraries
+#  # parallel::clusterEvalQ(cl, library(BayesianTools))
+#  parallel::clusterExport(cl, varlist = list(likelihood))
+#  
+#  ## create BayesianSetup
+#  bayesianSetup <- createBayesianSetup(pLikelihood, lower = -10, upper = 10, parallel = 'external')
+#  
+#  ## For this case we want to parallelize the internal chains, therefore we create a n row matrix with startValues, if you parallelize a model in the likelihood, do not set a n*row Matrix for startValue
+#  settings = list(iterations = 100, nrChains = 1, startValue = bayesianSetup$prior$sampler(n))
+#  
+#  ## runMCMC
+#  out <- runMCMC(bayesianSetup, settings, sampler = "DEzs")
+
+## ---- eval = FALSE-------------------------------------------------------
+#  ### Create cluster with n cores
+#  cl <- parallel::makeCluster(n)
+#  
+#  ## export your model
+#  # parallel::clusterExport(cl, varlist = list(complexModel))
+#  
+#  ## Definition of the likelihood
+#  likelihood  <- function(param) {
+#    # ll <- complexModel(param)
+#    # return(ll)
+#  }
+#  
+#  ## create BayesianSetup and settings
+#  bayesianSetup <- createBayesianSetup(likelihood, lower = -10, upper = 10, parallel = 'external')
+#  settings = list(iterations = 100, nrChains = 1)
+#  
+#  ## runMCMC
+#  out <- runMCMC(bayesianSetup, settings)
+#  
+
+## ---- eval = FALSE-------------------------------------------------------
+#  ### Definition of likelihood function
+#  x <- c(1:10)
+#  likelihood <- function(param) return(sum(dnorm(x, mean = param, log = T)))
+#  
+#  ## Create BayesianSetup and settings
+#  bayesianSetup <- createBayesianSetup(likelihood, lower = -10, upper = 10, parallel = F)
+#  settings = list(iterations = 100000)
+#  
+#  ## Start cluster with n cores for n chains and export BayesianTools library
+#  cl <- parallel::makeCluster(n)
+#  parallel::clusterEvalQ(cl, library(BayesianTools))
+#  
+#  ## calculate parallel n chains, for each chain the likelihood will be calculated on one core
+#  out <- parallel::parLapply(cl, 1:n, fun = function(X, bayesianSetup, settings) runMCMC(bayesianSetup, settings, sampler = "DEzs"), bayesianSetup, settings)
+#  
+#  ## Combine the chains
+#  out <- createMcmcSamplerList(out)
 
 ## ------------------------------------------------------------------------
 # Create a BayesianSetup
@@ -105,7 +178,7 @@ settings = list(iterations = 10000, nrChains= 3, message = FALSE)
 out <- runMCMC(bayesianSetup = bayesianSetup, sampler = "Metropolis", settings = settings)
 
 plot(out)
-marginalPlot(out)
+marginalPlot(out, prior = T)
 correlationPlot(out)
 gelmanDiagnostics(out, plot=T)
 
@@ -254,4 +327,19 @@ exp(M1$marginalLikelihod - M2$marginalLikelihod)
 ## ------------------------------------------------------------------------
 DIC(out1)$DIC
 DIC(out2)$DIC
+
+## ------------------------------------------------------------------------
+# This will not work, since likelihood1 has no sum argument
+# WAIC(out1)
+
+# likelihood with sum argument
+likelihood3 <- function(param, sum = TRUE){
+    pred <- param[1] + param[2]*x + param[3] * x^2
+    singlelikelihoods <- dnorm(y, mean = pred, sd = 1/(param[4]^2), log = T)
+    return(if (sum == TRUE) sum(singlelikelihoods) else singlelikelihoods)  
+}
+setUp3 <- createBayesianSetup(likelihood3, lower = c(-5,-5,-5,0.01), upper = c(5,5,5,30))
+out3 <- runMCMC(bayesianSetup = setUp3, sampler = "Metropolis", settings = settings)
+
+WAIC(out3)
 

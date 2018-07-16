@@ -1,16 +1,50 @@
 NOTE: for more news about the package, see https://github.com/florianhartig/BayesianTools/releases
 
+# BayesianTools 0.1.5
+
+Changes / improvements
+
+- marginalPlot changed / updated
+
+Minor changes 
+
+- getSample behavior https://github.com/florianhartig/BayesianTools/issues/133
+- Create a check of start values / check matrix at the runMCMC level https://github.com/florianhartig/BayesianTools/issues/114
+
+Bugfixes:
+
+- Removed package dependency in unit tests https://github.com/florianhartig/BayesianTools/issues/136
+- Bugfix in bridge sampling https://github.com/florianhartig/BayesianTools/issues/121
+- Missing -Inf -> - Inf check in DEzs and DREAMzs with parallel = T https://github.com/florianhartig/BayesianTools/issues/113
+
+
 # BayesianTools 0.1.4
 
-Changes 
+Compatibility
 
-- added bridge sampling to ML 
-- added support for Nimble output objects
-- extended options for plotMarginals
+- added NIMBLE support to getSample and plotting functions
+- added coda support to plotTimeSeriesResults and plotMarginals
 
-Bugfixes
+Changes
 
-- numerical instability in T-Walk, added a warning for now, will hopefully be fixed soon
+- IMPORTANT: added a warning when calling runMCMC with the "twalk" sampler. At the moment, using this sampler is discouraged
+- marginalPlot can now plot prior and/or posterior, either as histogram or as violin plots
+- added bridge sampling to marginalLikelihood
+- added shortcuts for AM, DR and DRAM samplers
+
+Bugfixes:
+
+- when calling getSample on mcmcSamplerList, the chains are now merged instead of concatenated 
+- formulas in the vignette are now rendered correctly
+- fixed a bug in VSEM help
+
+Minor Changes:
+
+- changed the ordering of the summary metrics of summary.mcmcSampler, and summary.mcmcSamplerList
+- renamed marginalLikelihood output to "ln.ML"
+- added tests for plotTimeSeriesResults, marginalPlot and marginalLikelihood
+- added an example with restart to DEzs
+
 
 # BayesianTools 0.1.3
 

@@ -1,14 +1,15 @@
 Package: BayesianTools
 Title: General-Purpose MCMC and SMC Samplers and Tools for Bayesian
         Statistics
-Version: 0.1.4
-Date: 2017-12-20
-Authors@R: c(person("Florian", "Hartig", email = "florian.hartig@biologie.uni-regensburg.de", role = c("aut", "cre")), person("Francesco", "Minunno", role = c("aut")), person("Stefan", " Paul", role = c("aut") ),  person("David", "Cameron", role = "ctb"), person("Tankred", "Ott", role = "ctb"))
+Version: 0.1.5
+Date: 2018-07-16
+Authors@R: c(person("Florian", "Hartig", email = "florian.hartig@biologie.uni-regensburg.de", role = c("aut", "cre")), person("Francesco", "Minunno", role = c("aut")), person("Stefan", " Paul", role = c("aut") ),  person("David", "Cameron", role = "ctb"), person("Tankred", "Ott", role = "ctb"), person("Maximilian", "Pichler", role = "ctb"))
 Author: Florian Hartig [aut, cre],
-    Francesco Minunno [aut],
-    Stefan Paul [aut],
-    David Cameron [ctb],
-    Tankred Ott [ctb]
+  Francesco Minunno [aut],
+  Stefan Paul [aut],
+  David Cameron [ctb],
+  Tankred Ott [ctb],
+  Maximilian Pichler [ctb]
 Maintainer: Florian Hartig <florian.hartig@biologie.uni-regensburg.de>
 Description: General-purpose MCMC and SMC samplers, as well as plot and
     diagnostic functions for Bayesian statistics, with a particular focus on
@@ -17,7 +18,7 @@ Description: General-purpose MCMC and SMC samplers, as well as plot and
     T-walk, two differential evolution MCMCs, two DREAM MCMCs, and a sequential
     Monte Carlo (SMC) particle filter.
 Depends: R (>= 3.1.2)
-License: CC BY-SA 4.0
+License: GPL-3
 Imports: coda, emulator, mvtnorm, tmvtnorm, IDPmisc, Rcpp (>= 0.12.12),
         ellipse, numDeriv, msm, MASS, Matrix, stats, utils, graphics,
         DHARMa, bridgesampling
@@ -30,6 +31,6 @@ URL: https://github.com/florianhartig/BayesianTools
 BugReports: https://github.com/florianhartig/BayesianTools/issues
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2017-12-20 11:50:06 UTC; florian
+Packaged: 2018-07-16 19:35:08 UTC; florian
 Repository: CRAN
-Date/Publication: 2017-12-20 12:13:37 UTC
+Date/Publication: 2018-07-16 20:10:02 UTC

@@ -7,7 +7,7 @@
 # outputs are tested. For the validity of the mcmc sampling
 # algorithms see the respective tests.
 
-
+skip_on_cran()
 
 context("Test workflow of package")
 
@@ -203,9 +203,9 @@ test_that("2-d with external parallelization and restart works", {
   cl <- parallel::makeCluster(2)
 
   # Likelihood function
-  ll <- function(pars,...){
-    if(is.matrix(pars)) res = parallel::parApply(cl = cl, pars, 1, FUN, ...)
-    else res = FUN(pars, ...)
+  ll <- function(pars, sum = T, ...){
+    if(is.matrix(pars)) res = parallel::parApply(cl = cl, pars, 1, FUN, sum, ...)
+    else res = FUN(pars, sum, ...)
     return(res)
   }
 
@@ -251,9 +251,9 @@ test_that("2-d with external parallelization, restart and multiple chains works"
   cl <- parallel::makeCluster(2)
 
   # Likelihood function
-  ll <- function(pars,...){
-    if(is.matrix(pars)) res = parallel::parApply(cl = cl, pars, 1, FUN, ...)
-    else res = FUN(pars, ...)
+  ll <- function(pars, sum = TRUE, ...){
+    if(is.matrix(pars)) res = parallel::parApply(cl = cl, pars, 1, FUN, sum, ...)
+    else res = FUN(pars, sum, ...)
     return(res)
   }
 
