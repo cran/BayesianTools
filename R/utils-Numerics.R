@@ -3,7 +3,7 @@
 
 #' Funktion to compute log(sum(exp(x))
 #' @author Florian Hartig
-#' @param x values
+#' @param x values at log scale
 #' @param mean logical, determines whether the mean should be used instead of the sum
 #' @details This function computes log(sum(exp(x)), using the offset trick to avoid numeric overflow, see, e.g. http://jblevins.org/notes/log-sum-exp. The mean option allows calculating logMeanExp
 #' 
@@ -19,7 +19,10 @@ logSumExp<- function(x, mean = F) {
     x = x[x != -Inf] 
   } 
   
-  if ( max(abs(x)) > max(x) ) offset <- min(x) else offset <- max(x)
+  # seems that this created problems in the presence of small values,
+  # doesn't seem to be a need to shift towards min
+  # if ( max(abs(x)) > max(x) ) offset <- min(x) else offset <- max(x)
+  offset <- max(x)
   if (mean == T) out = log(sum(exp(x - offset))/nObs) + offset
   else out = log(sum(exp(x - offset))) + offset
   return(out)
