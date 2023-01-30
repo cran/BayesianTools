@@ -60,10 +60,13 @@ metropolisRatio <- function(LP2, LP1, tempering = 1){
 } 
 
 
-#' Calculates the panel combination for par(mfrow = )
+#' getPanels
+#' 
+#' Calculates the argument x for par(mfrow = x) for a desired number of panels
+#' 
 #' @author Florian Hartig
 #' @param x the desired number of panels 
-#' @keywords internal
+#' @export
 getPanels <- function(x){
   if (x <= 0) stop("number can't be < 1")
   
@@ -114,13 +117,9 @@ sampleEquallySpaced <- function(x, numSamples) {
     warning("numSamples is less than 1! Only the first sample was selected.")
   }
   
-  sel <- seq(1, len, len = numSamples)
+  sel <- seq(1, len, len = numSamples) 
   if (is.matrix(x)) {
-    out <- x[sel,]
-    # if x has only a single col, x[sel,] is a vector and needs to be converted
-    if(!is.matrix(out)) {
-      out <- matrix(out, ncol = ncol(x))
-    }
+    out <- x[sel, , drop=F]
   } else {
     out <- x[sel]
   }
@@ -128,7 +127,7 @@ sampleEquallySpaced <- function(x, numSamples) {
   return(out)
 }
 
-#' Checks if thin is conistent with nTotalSamples samples and if not corrects it.
+#' Checks if thin is consistent with nTotalSamples samples and if not corrects it.
 #' @author Tankred Ott
 #' @param nTotalSamples total number of rows/samples 
 #' @param thin thinning
@@ -154,13 +153,14 @@ correctThin <- function(nTotalSamples, thin, autoThinFraction = 0.001) {
   return(thin)
 }
 
-#' @author Tankred Ott
 #' @title Rescale
 #' @description Rescales values in the interval "from" (lower, upper) to the new interval "to" (lower, upper).
-#' @param x Vector of values
-#' @param from vector, interval of which x are elements. from[1] must be the lower, from[2] the upper bound.
-#' @param to vector, interval to which the elements should be scaled. to[1] must be the lower, to[2] the upper bound.
+#' @param x vector of values tp be scaled
+#' @param from vector of length 2, original interval (lower, upper)
+#' @param to vector of length 2, target interval (lower, upper)
+#' 
 #' @keywords internal
+#' @author Tankred Ott
 rescale <- function (x, from, to) {
   # scale x from 0 to 1
   x <- (x - from[1]) / (from[2] - from[1])

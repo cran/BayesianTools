@@ -4,9 +4,18 @@
 \alias{plotDiagnostic}
 \title{Diagnostic Plot}
 \usage{
-plotDiagnostic(out, start = 50, numSamples = 100, window = 0.2,
-  plotWAIC = F, plotPSRF = T, plotDIC = T, plotTrace = T,
-  graphicParameters = NULL, ...)
+plotDiagnostic(
+  out,
+  start = 50,
+  numSamples = 100,
+  window = 0.2,
+  plotWAIC = F,
+  plotPSRF = T,
+  plotDIC = T,
+  plotTrace = T,
+  graphicParameters = NULL,
+  ...
+)
 }
 \arguments{
 \item{out}{object of class "bayesianOutput"}
@@ -33,18 +42,17 @@ plotDiagnostic(out, start = 50, numSamples = 100, window = 0.2,
 This function plots the DIC, WAIC, mPSRF, PSRF(with upper C.I.) and traces of the parameters in dependence of iterations. DIC, WAIC are plotted separately for the chains and the trace plots also for the internal chains.
 }
 \examples{
-# Create bayesian setup with  
-bayesianSetup <- createBayesianSetup(likelihood = testDensityNormal, 
-                                     prior = createUniformPrior(lower = -10,
-                                                                upper = 10))
-
-# running MCMC
-
-out = runMCMC(bayesianSetup = bayesianSetup)
-
-# diagnostic plots
 \dontrun{
-plotDiagnostic(out)
+  
+  # Create bayesian setup with  
+  bayesianSetup <- createBayesianSetup(likelihood = testDensityNormal, 
+                                       prior = createUniformPrior(lower = -10,
+                                                                  upper = 10))
+  # running MCMC
+  out = runMCMC(bayesianSetup = bayesianSetup)
+  
+  # diagnostic plots
+  plotDiagnostic(out)
 }
 }
 \author{

@@ -4,8 +4,16 @@
 \alias{marginalPlot}
 \title{Plot MCMC marginals}
 \usage{
-marginalPlot(x, prior = NULL, xrange = NULL, type = "d",
-  singlePanel = FALSE, settings = NULL, nPriorDraws = 10000, ...)
+marginalPlot(
+  x,
+  prior = NULL,
+  xrange = NULL,
+  type = "d",
+  singlePanel = FALSE,
+  settings = NULL,
+  nPriorDraws = 10000,
+  ...
+)
 }
 \arguments{
 \item{x}{bayesianOutput, or matrix or data.frame containing with samples as rows and parameters as columns}
@@ -62,5 +70,5 @@ marginalPlot(out, type = 'v', singlePanel = TRUE,
 marginalPlot(out, type = 'v', singlePanel = TRUE, numSamples = 500)
 }
 \author{
-Tankred Ott
+Tankred Ott, Florian Hartig
 }

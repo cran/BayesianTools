@@ -1,31 +1,34 @@
-## ----global_options, include=FALSE---------------------------------------
+## ----global_options, include=FALSE--------------------------------------------
 knitr::opts_chunk$set(fig.width=5, fig.height=5, warning=FALSE, cache = F)
 
-## ---- echo = F, message = F----------------------------------------------
+## ---- echo = F, message = F---------------------------------------------------
 set.seed(123)
 
-## ---- eval = F-----------------------------------------------------------
+## ---- eval = F----------------------------------------------------------------
 #  runMyModel(par)
 
-## ---- eval = F-----------------------------------------------------------
+## ---- eval = F----------------------------------------------------------------
+#  dyn.load(model)
+#  
+#  runMyModel(par){
+#    out = # model call here
+#    # process out
+#    return(out)
+#  }
+
+## ---- eval = F----------------------------------------------------------------
 #  runMyModel(par){
 #  
 #    # Create here a string with what you would write to call the model from the command line
 #    systemCall <- paste("model.exe", par[1], par[2])
 #  
-#    # this
-#    system(systemCall)
+#    out = system(systemCall,  intern = TRUE) # intern indicates whether to capture the output of the command as an R character vector
+#  
+#    # write here to convert out in the apprpriate R classes
 #  
 #  }
 
-## ---- eval = F-----------------------------------------------------------
-#  dyn.load(model)
-#  
-#  runMyModel(par){
-#    # model call here
-#  }
-
-## ---- eval = F-----------------------------------------------------------
+## ---- eval = F----------------------------------------------------------------
 #  runMyModel(par, returnData = NULL){
 #  
 #    writeParameters(par)
@@ -44,7 +47,7 @@ set.seed(123)
 #    # write parameter file
 #  }
 
-## ---- eval = F-----------------------------------------------------------
+## ---- eval = F----------------------------------------------------------------
 #  setUpModel <- function(parameterTemplate, site, localConditions){
 #  
 #    # create the runModel, readData functions (see later) here
@@ -53,7 +56,7 @@ set.seed(123)
 #  
 #  }
 
-## ---- eval = F-----------------------------------------------------------
+## ---- eval = F----------------------------------------------------------------
 #  getData(type = X){
 #  
 #    read.csv(xxx)
@@ -63,7 +66,7 @@ set.seed(123)
 #    # return data in desidered format
 #  }
 
-## ---- eval = F-----------------------------------------------------------
+## ---- eval = F----------------------------------------------------------------
 #  par = c(1,2,3,4 ..)
 #  
 #  runMyModel(par)
@@ -72,26 +75,39 @@ set.seed(123)
 #  
 #  plot(output)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 mymodel<-function(x){
   output<-0.2*x+0.1^x
   return(output)
 }
 
-## ------------------------------------------------------------------------
+## ---- eval = F----------------------------------------------------------------
+#  
+#  library(parallel)
+#  cl <- makeCluster(2)
+#  
+#  runParallel<- function(parList){
+#    parSapply(cl, parList, mymodel)
+#  }
+#  
+#  runParallel(c(1,2))
 
-library(parallel)
-cl <- makeCluster(2)
+## ---- eval = F----------------------------------------------------------------
+#  library(BayesianTools)
+#  parModel <- generateParallelExecuter(mymodel)
 
-runParallel<- function(parList){
-  
-  parSapply(cl, parList, mymodel)
-  
-}
-
-runParallel(c(1,2))
-
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(BayesianTools)
-parModel <- generateParallelExecuter(mymodel)
+
+ll <- generateTestDensityMultiNormal(sigma = "no correlation")
+bayesianSetup <- createBayesianSetup(likelihood = ll, lower = rep(-10, 3), upper = rep(10, 3))
+
+settings = list(iterations = 200)
+
+# run the several MCMCs chains either in seperate R sessions, or via R parallel packages
+out1 <- runMCMC(bayesianSetup = bayesianSetup, sampler = "DEzs", settings = settings)
+out2 <- runMCMC(bayesianSetup = bayesianSetup, sampler = "DEzs", settings = settings)
+
+res <- createMcmcSamplerList(list(out1, out2))
+plot(res)
 

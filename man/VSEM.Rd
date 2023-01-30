@@ -4,9 +4,12 @@
 \alias{VSEM}
 \title{Very simple ecosystem model}
 \usage{
-VSEM(pars = c(KEXT = 0.5, LAR = 1.5, LUE = 0.002, GAMMA = 0.4, tauV =
-  1440, tauS = 27370, tauR = 1440, Av = 0.5, Cv = 3, Cs = 15, Cr = 3), PAR,
-  C = TRUE)
+VSEM(
+  pars = c(KEXT = 0.5, LAR = 1.5, LUE = 0.002, GAMMA = 0.4, tauV = 1440, tauS = 27370,
+    tauR = 1440, Av = 0.5, Cv = 3, Cs = 15, Cr = 3),
+  PAR,
+  C = TRUE
+)
 }
 \arguments{
 \item{pars}{a parameter vector with parameters and initial states}
@@ -30,7 +33,7 @@ The model calculates Gross Primary Productivity (GPP) using a very simple light-
 
 A parameter (GAMMA) determines the fraction of GPP that is autotrophic respiration. The Net Primary Productivity (NPP) is then allocated to above and below-ground vegetation via a fixed allocation fraction. Carbon is lost from the plant pools to a single soil pool via fixed turnover rates. Heterotropic respiration in the soil is determined via a soil turnover rate.
 
-The model equations are 
+The model equations are
 
 -- Photosynthesis
 

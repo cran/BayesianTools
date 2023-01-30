@@ -4,8 +4,14 @@
 \alias{createLikelihood}
 \title{Creates a standardized likelihood class#'}
 \usage{
-createLikelihood(likelihood, names = NULL, parallel = F,
-  catchDuplicates = T, sampler = NULL, parallelOptions = NULL)
+createLikelihood(
+  likelihood,
+  names = NULL,
+  parallel = F,
+  catchDuplicates = T,
+  sampler = NULL,
+  parallelOptions = NULL
+)
 }
 \arguments{
 \item{likelihood}{Log likelihood density}
@@ -25,7 +31,7 @@ Creates a standardized likelihood class#'
 }
 \seealso{
 \code{\link{likelihoodIidNormal}} \cr
-         \code{\link{likelihoodAR1}} \cr
+\code{\link{likelihoodAR1}} \cr
 }
 \author{
 Florian Hartig

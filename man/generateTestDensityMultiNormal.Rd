@@ -4,8 +4,13 @@
 \alias{generateTestDensityMultiNormal}
 \title{Multivariate normal likelihood}
 \usage{
-generateTestDensityMultiNormal(mean = c(0, 0, 0),
-  sigma = "strongcorrelation", sample = F, n = 1, throwErrors = -1)
+generateTestDensityMultiNormal(
+  mean = c(0, 0, 0),
+  sigma = "strongcorrelation",
+  sample = F,
+  n = 1,
+  throwErrors = -1
+)
 }
 \arguments{
 \item{mean}{vector with the three mean values of the distribution}
@@ -36,7 +41,7 @@ density(x[1,])
 }
 \seealso{
 \code{\link{testDensityBanana}} \cr
-         \code{\link{testLinearModel}}
+\code{\link{testLinearModel}}
 }
 \author{
 Florian Hartig

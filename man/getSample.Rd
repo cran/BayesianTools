@@ -13,59 +13,140 @@
 \alias{getSample.MCMC_refClass}
 \title{Extracts the sample from a bayesianOutput}
 \usage{
-getSample(sampler, parametersOnly = T, coda = F, start = 1,
-  end = NULL, thin = 1, numSamples = NULL, whichParameters = NULL,
-  includesProbabilities = F, reportDiagnostics = FALSE, ...)
+getSample(
+  sampler,
+  parametersOnly = T,
+  coda = F,
+  start = 1,
+  end = NULL,
+  thin = 1,
+  numSamples = NULL,
+  whichParameters = NULL,
+  reportDiagnostics = FALSE,
+  ...
+)
 
-\method{getSample}{matrix}(sampler, parametersOnly = T, coda = F,
-  start = 1, end = NULL, thin = "auto", numSamples = NULL,
-  whichParameters = NULL, includesProbabilities = F,
-  reportDiagnostics = F, ...)
+\method{getSample}{matrix}(
+  sampler,
+  parametersOnly = T,
+  coda = F,
+  start = 1,
+  end = NULL,
+  thin = "auto",
+  numSamples = NULL,
+  whichParameters = NULL,
+  reportDiagnostics = F,
+  ...
+)
 
-\method{getSample}{double}(sampler, parametersOnly = T, coda = F,
-  start = 1, end = NULL, thin = "auto", numSamples = NULL,
-  whichParameters = NULL, includesProbabilities = F,
-  reportDiagnostics = F, ...)
+\method{getSample}{double}(
+  sampler,
+  parametersOnly = T,
+  coda = F,
+  start = 1,
+  end = NULL,
+  thin = "auto",
+  numSamples = NULL,
+  whichParameters = NULL,
+  reportDiagnostics = F,
+  ...
+)
 
-\method{getSample}{integer}(sampler, parametersOnly = T, coda = F,
-  start = 1, end = NULL, thin = "auto", numSamples = NULL,
-  whichParameters = NULL, includesProbabilities = F,
-  reportDiagnostics = F, ...)
+\method{getSample}{integer}(
+  sampler,
+  parametersOnly = T,
+  coda = F,
+  start = 1,
+  end = NULL,
+  thin = "auto",
+  numSamples = NULL,
+  whichParameters = NULL,
+  reportDiagnostics = F,
+  ...
+)
 
-\method{getSample}{data.frame}(sampler, parametersOnly = T, coda = F,
-  start = 1, end = NULL, thin = "auto", numSamples = NULL,
-  whichParameters = NULL, includesProbabilities = F,
-  reportDiagnostics = F, ...)
+\method{getSample}{data.frame}(
+  sampler,
+  parametersOnly = T,
+  coda = F,
+  start = 1,
+  end = NULL,
+  thin = "auto",
+  numSamples = NULL,
+  whichParameters = NULL,
+  reportDiagnostics = F,
+  ...
+)
 
-\method{getSample}{list}(sampler, parametersOnly = T, coda = F,
-  start = 1, end = NULL, thin = "auto", numSamples = NULL,
-  whichParameters = NULL, includesProbabilities = F,
-  reportDiagnostics = F, ...)
+\method{getSample}{list}(
+  sampler,
+  parametersOnly = T,
+  coda = F,
+  start = 1,
+  end = NULL,
+  thin = "auto",
+  numSamples = NULL,
+  whichParameters = NULL,
+  reportDiagnostics = F,
+  ...
+)
 
-\method{getSample}{mcmc}(sampler, parametersOnly = T, coda = F,
-  start = 1, end = NULL, thin = "auto", numSamples = NULL,
-  whichParameters = NULL, includesProbabilities = F,
-  reportDiagnostics = F, ...)
+\method{getSample}{mcmc}(
+  sampler,
+  parametersOnly = T,
+  coda = F,
+  start = 1,
+  end = NULL,
+  thin = "auto",
+  numSamples = NULL,
+  whichParameters = NULL,
+  reportDiagnostics = F,
+  ...
+)
 
-\method{getSample}{mcmc.list}(sampler, parametersOnly = T, coda = F,
-  start = 1, end = NULL, thin = "auto", numSamples = NULL,
-  whichParameters = NULL, includesProbabilities = F,
-  reportDiagnostics = F, ...)
+\method{getSample}{mcmc.list}(
+  sampler,
+  parametersOnly = T,
+  coda = F,
+  start = 1,
+  end = NULL,
+  thin = "auto",
+  numSamples = NULL,
+  whichParameters = NULL,
+  reportDiagnostics = F,
+  ...
+)
 
-\method{getSample}{MCMC}(sampler, parametersOnly = T, coda = F,
-  start = 1, end = NULL, thin = "auto", numSamples = NULL,
-  whichParameters = NULL, includesProbabilities = F,
-  reportDiagnostics = F, ...)
+\method{getSample}{MCMC}(
+  sampler,
+  parametersOnly = T,
+  coda = F,
+  start = 1,
+  end = NULL,
+  thin = "auto",
+  numSamples = NULL,
+  whichParameters = NULL,
+  reportDiagnostics = F,
+  ...
+)
 
-\method{getSample}{MCMC_refClass}(sampler, parametersOnly = T,
-  coda = F, start = 1, end = NULL, thin = "auto",
-  numSamples = NULL, whichParameters = NULL,
-  includesProbabilities = F, reportDiagnostics = F, ...)
+\method{getSample}{MCMC_refClass}(
+  sampler,
+  parametersOnly = T,
+  coda = F,
+  start = 1,
+  end = NULL,
+  thin = "auto",
+  numSamples = NULL,
+  whichParameters = NULL,
+  reportDiagnostics = F,
+  ...
+)
 }
 \arguments{
 \item{sampler}{an object of class mcmcSampler, mcmcSamplerList, smcSampler, smcSamplerList, mcmc, mcmc.list, double, numeric}
 
-\item{parametersOnly}{if F, likelihood, posterior and prior values are also provided in the output}
+\item{parametersOnly}{for a BT output, if F, likelihood, posterior and prior values are also provided in the output}
 
 \item{coda}{works only for mcmc classes - provides output as a coda object. Note: if mcmcSamplerList contains mcmc samplers such as DE that have several chains, the internal chains will be collapsed. This may not be the desired behavior for all applications.}
 
@@ -78,8 +159,6 @@ getSample(sampler, parametersOnly = T, coda = F, start = 1,
 \item{numSamples}{sample size (only used if thin = 1). If you want to use numSamples set thin to 1.}
 
 \item{whichParameters}{possibility to select parameters by index}
-
-\item{includesProbabilities}{applies only to getSample.Matrix. logical, determining whether probabilities should be included in the result.}
 
 \item{reportDiagnostics}{logical, determines whether settings should be included in the output}
 
@@ -119,22 +198,6 @@ sample_2 <- getSample(out_2, numSamples = 100)
 }
 \author{
 Florian Hartig
-
-Florian Hartig
-
-Tankred Ott
-
-Tankred Ott
-
-Tankred Ott
-
-Tankred Ott
-
-Tankred Ott
-
-Tankred Ott
-
-Tankred Ott
 
 Tankred Ott
 }

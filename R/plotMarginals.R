@@ -11,17 +11,23 @@ marginalPlot <- function(x, ...) UseMethod("marginalPlot")
 #' @param nPriorDraws number of draws from the prior, if x is bayesianOutput
 #' @param ... additional arguments passed to \code{\link{getSample}}. If you have a high number of draws from the posterior it is advised to set numSamples (to e.g. 5000) for performance reasons.
 #' @example /inst/examples/marginalPlotHelp.R
-#' @author Tankred Ott
+#' @author Tankred Ott, Florian Hartig
 marginalPlot <- function(x, prior = NULL, xrange = NULL, type = 'd', singlePanel = FALSE, settings = NULL,
                          nPriorDraws = 10000, ...) {
   
   posteriorMat <- getSample(x, parametersOnly = TRUE, ...)
   
-  # check prior
+  # checking for which
+  args <- list(...)   
+  if("which" %in% names(args))
+    which = args$which
+  else
+    which = 1:ncol(posteriorMat)
   
+  # check prior
   if ('bayesianOutput' %in% class(x)) {
     
-    # default T 
+    # default T if NULL and BayesianOutput provide
     if (is.null(prior)) prior = TRUE
     
     if (any(c('data.frame', 'matrix') %in% class(prior))) priorMat = prior
@@ -44,6 +50,7 @@ marginalPlot <- function(x, prior = NULL, xrange = NULL, type = 'd', singlePanel
   }
 
   if (!is.null(priorMat)) {
+    priorMat = priorMat[,which,drop=F]
     if (ncol(posteriorMat) != ncol(priorMat)) stop("wrong dimensions of prior")
     colnames(priorMat) <- colnames(posteriorMat)    
   }
@@ -96,7 +103,7 @@ marginalPlot <- function(x, prior = NULL, xrange = NULL, type = 'd', singlePanel
 #' @author Tankred Ott
 #' @keywords internal
 # TODO: this could be simplified. It is verbose for now to be able to change stuff easily
-marginalPlotDensity <- function(posteriorMat, priorMat = NULL, xrange = NULL, col=c('#FC006299','#00BBAA88'), 
+marginalPlotDensity <- function(posteriorMat, priorMat = NULL, xrange = NULL, col=c('#FC006299','#00BBAA30'), 
                                 singlePanel = TRUE, ...) {
   
   nPar <- ncol(posteriorMat)

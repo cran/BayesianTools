@@ -4,8 +4,13 @@
 \alias{getPredictiveIntervals}
 \title{Calculates Bayesian credible (confidence) and predictive intervals based on parameter sample}
 \usage{
-getPredictiveIntervals(parMatrix, model, numSamples = 1000,
-  quantiles = c(0.025, 0.975), error = NULL)
+getPredictiveIntervals(
+  parMatrix,
+  model,
+  numSamples = 1000,
+  quantiles = c(0.025, 0.975),
+  error = NULL
+)
 }
 \arguments{
 \item{parMatrix}{matrix of parameter values}
@@ -26,7 +31,7 @@ If numSamples is greater than the number of rows in parMatrix, or NULL, or FALSE
 }
 \seealso{
 \code{\link{getPredictiveDistribution}} \cr
-         \code{\link{getCredibleIntervals}} \cr
+\code{\link{getCredibleIntervals}} \cr
 }
 \author{
 Florian Hartig

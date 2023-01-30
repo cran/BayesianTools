@@ -48,7 +48,7 @@ Pro-tip: if you are running a stochastic algorithms such as an MCMC, you should 
 set.seed(123)
 ```
 
-In a real application, to ensure reproducibility, it would also be useful to record the session
+In a real application, to ensure reproducibility, it would also be useful to record the session info,
 
 ```{r, eval = F}
 sessionInfo()
@@ -62,7 +62,10 @@ The central object in the BT package is the BayesianSetup. This class contains t
 
 A BayesianSetup is created by the createBayesianSetup function. The function expects a log-likelihood and (optional) a log-prior. It then automatically creates the posterior and various convenience functions for the samplers. 
 
-Advantages of the BayesianSetup include 1) support for automatic parallelization, 2) functions are wrapped in try-catch statements to avoid crashes during long MCMC evaluations, 3) and the posterior checks if the parameter is outside the prior first, in which case the likelihood is not evaluated (makes the algorithms faster for slow likelihoods).
+Advantages of the BayesianSetup include
+1. support for automatic parallelization
+2. functions are wrapped in try-catch statements to avoid crashes during long MCMC evaluations
+3. and the posterior checks if the parameter is outside the prior first, in which case the likelihood is not evaluated (makes the algorithms faster for slow likelihoods).
 
 If no prior information is provided, an unbounded flat prior is created. If no explicit prior, but lower and upper values are provided, a standard uniform prior with the respective bounds is created, including the option to sample from this prior, which is useful for SMC and also for getting starting values. This option is used in the following example, which creates a multivariate normal likelihood density and a uniform prior for 3 parameters.
 
@@ -216,17 +219,17 @@ runMCMC(BS, sampler = "SMC", ...)
 #### 3. Multi-core and cluster calculations
 If you want to run your calculations on a cluster there are several ways to achieve it.
 
-In the first case you want to parallize n internal (not overall chains) on n cores. The argument "parallel = T" in "createBayesianSetup" allows only at most parallelization on 3 cores for the SMC, DEzs and DreamsSamplers. But by setting "parallel = n" to n cores in the "createBayesianSetup" and providing the settings list a "startValue" matrix with n rows, the internal chains of DEzs and DREAMzs will be parallelized on n cores. This works only for the DEzs and DREAMzs samplers.
+In the first case you want to parallize n internal (not overall chains) on n cores. The argument "parallel = T" in "createBayesianSetup" allows only at most parallelization on 3 cores for the SMC, DEzs and DreamsSamplers. But by setting "parallel = n" to n cores in the "createBayesianSetup", the internal chains of DEzs and DREAMzs will be parallelized on n cores. This works only for the DEzs and DREAMzs samplers.
 
 ```{r, eval = FALSE}
 ## n = Number of cores
+n=2
 x <- c(1:10)
 likelihood <- function(param) return(sum(dnorm(x, mean = param, log = T)))
 bayesianSetup <- createBayesianSetup(likelihood, parallel = n, lower = -5, upper = 5)
 
 ## give runMCMC a matrix with n rows of proposals as startValues or sample n times from the previous created sampler
-out <- runMCMC(bayesianSetup, settings = list(iterations = 100000, startValues = bayesianSetup$prior$sampler(n)))
-
+out <- runMCMC(bayesianSetup, settings = list(iterations = 1000))
 ```
 
 In the second case you want to parallize n internal chains on n cores with a external parallilzed likelihood function. Unlike the previous case, that way DEzs, DREAMzs, and SMC samplers can be parallelized. 
@@ -316,7 +319,7 @@ The prior in the BayesianSetup consists of four parts
 * lower / upper boundaries
 * Additional info - best values, names of the parameters, ... 
 
-These information can passed by first creating an a extra object, via createPrior, or through the the createBayesianSetup function. 
+These information can be passed by first creating an a extra object, via createPrior, or through the the createBayesianSetup function. 
 
 #### Creating priors
 
@@ -534,7 +537,7 @@ plot(out)
 The BT package implements two versions of the differential evolution MCMC. In doubt, you should use the DEzs option. 
 
 The first is the normal DE MCMC, corresponding to Ter Braak, Cajo JF. "A Markov Chain Monte Carlo version of the genetic algorithm Differential Evolution: easy Bayesian computing for real parameter spaces." Statistics and Computing 16.3 (2006): 239-249.
-In this sampler multiple chains are run in parallel (but not in the sense of parallel computing). The main diference to the Metrpolis based algorithms is the creation of the propsal. Generally all samplers use the current positin of the chain and add a step in the parameter space to generate a new proposal. Whereas in the Metropolis based sampler this step is usually drawn from a multivariate normal distribution (yet every distribution is possible), the DE sampler uses the current position of two other chains to generate the step for each chain. For sucessful sampling at least 2*d chains, with d being the number of parameters, need to be run in parallel. 
+In this sampler multiple chains are run in parallel (but not in the sense of parallel computing). The main difference to the Metropolis based algorithms is the creation of the proposal. Generally all samplers use the current positin of the chain and add a step in the parameter space to generate a new proposal. Whereas in the Metropolis based sampler this step is usually drawn from a multivariate normal distribution (yet every distribution is possible), the DE sampler uses the current position of two other chains to generate the step for each chain. For sucessful sampling at least 2*d chains, with d being the number of parameters, need to be run in parallel. 
 
 
 
@@ -578,7 +581,7 @@ Again, in doubt you should prefer "DREAMzs".
 ```{r, results = 'hide', eval = FALSE}
 settings <- list(iterations = iter,  message = FALSE)
 out <- runMCMC(bayesianSetup = bayesianSetup, sampler = "DREAMzs", settings = settings)
-#plot(out) 
+plot(out) 
 ```
 
 
@@ -763,4 +766,3 @@ out3 <- runMCMC(bayesianSetup = setUp3, sampler = "Metropolis", settings = setti
 
 WAIC(out3)
 ```
-

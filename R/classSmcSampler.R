@@ -1,6 +1,6 @@
 #' @author Florian Hartig
 #' @export
-getSample.smcSampler <- function(sampler, parametersOnly = T, coda = F, start = 1, end = NULL, thin = 1, numSamples = NULL, whichParameters = NULL, includesProbabilities = F, reportDiagnostics = FALSE, ...){
+getSample.smcSampler <- function(sampler, parametersOnly = T, coda = F, start = 1, end = NULL, thin = 1, numSamples = NULL, whichParameters = NULL, reportDiagnostics = FALSE, ...){
   
   if(is.null(end)) end = nrow(sampler$particles)
   
@@ -49,7 +49,7 @@ getSample.smcSampler <- function(sampler, parametersOnly = T, coda = F, start = 
 summary.smcSampler<- function(object, ...){
   sampler <- object
   print("SMC sampler output")
-  summary(getSample(sampler))
+  summary(getSample(sampler, ...))
 }
 
 #' @method plot smcSampler
