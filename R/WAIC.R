@@ -1,4 +1,3 @@
-
 # TODO - implement WAIC as AIC, can look at https://github.com/jrnold/mcmcStats/blob/master/R/waic.R, check against http://finzi.psych.upenn.edu/library/blmeco/html/WAIC.html, https://cran.r-project.org/web/packages/loo/index.html, http://stats.stackexchange.com/questions/173128/watanabe-akaike-widely-applicable-information-criterion-waic-using-pymc
 
 
@@ -7,7 +6,7 @@
 #' @param bayesianOutput an object of class BayesianOutput. Must implement a log-likelihood density function that can return point-wise log-likelihood values ("sum" argument).
 #' @param numSamples the number of samples to calculate the WAIC
 #' @param ... optional values to be passed on the the getSample function 
-#' @note The function requires that the likelihood passed on to BayesianSetup contains the option sum = T/F, with defaul F. If set to true, the likelihood for each data point must be returned. 
+#' @note The function requires that the likelihood passed on to BayesianSetup contains the option sum = T/F, with default F. If set to true, the likelihood for each data point must be returned. 
 #' @details
 #'
 #'
@@ -30,7 +29,7 @@
 #' 
 #' @references
 #' 
-#' Gelman, Andrew and Jessica Hwang and Aki Vehtari (2013), "Understanding Predictive Information Criteria for Bayesian Models," \url{http://www.stat.columbia.edu/~gelman/research/unpublished/waic_understand_final.pdf}.
+#' Gelman, Andrew and Jessica Hwang and Aki Vehtari (2013), "Understanding Predictive Information Criteria for Bayesian Models," \doi{10.48550/arXiv.1307.5928}.
 #'
 #' Watanabe, S. (2010). "Asymptotic Equivalence of Bayes Cross Validation and Widely Applicable Information Criterion in Singular Learning Theory", Journal of Machine Learning Research, \url{https://www.jmlr.org/papers/v11/watanabe10a.html}.
 #' @example /inst/examples/WAICHelp.R

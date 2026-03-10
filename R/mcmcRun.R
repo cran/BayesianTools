@@ -24,11 +24,13 @@
 #' 
 #' Note that even if you specify parallel = T, this will only turn on internal parallelization of the samplers. The independent samplers controlled by nrChains are not evaluated in parallel, so if time is an issue it will be better to run the MCMCs individually and then combine them via \code{\link{createMcmcSamplerList}} into one joint object. 
 #' 
-#' Note that DE and DREAM variants as well as SMC and T-walk require a population to start, which should be provided as a matrix. Default (NULL) sets the population size for DE to 3 x dimensions of parameters, for DREAM to 2 x dimensions of parameters and for DEzs and DREAMzs to three, sampled from the prior. Note also that the zs variants of DE and DREAM require two populations, the current population and the z matrix (a kind of memory) - if you want to set both, provide a list with startvalue$X and startvalue$Z. 
+#' Note that, DE and DREAM variants as well as SMC and T-walk require a population to start, which should be provided as a matrix. Default (NULL) sets the population size for DE to 3 x dimensions of parameters, for DREAM to 2 x dimensions of parameters and for DEzs and DREAMzs to three, sampled from the prior. Note also that the zs variants of DE and DREAM require two populations, the current population and the z matrix (a kind of memory) - if you want to set both, provide a list with startvalue$X and startvalue$Z. 
 #' 
 #' setting startValue for sampling with nrChains > 1 : if you want to provide different start values for the different chains, provide them as a list
 #' 
-#' @return The function returns an object of class mcmcSampler (if one chain is run) or mcmcSamplerList. Both have the superclass bayesianOutput. It is possible to extract the samples as a coda object or matrix with \code{\link{getSample}}. 
+#' @return The function returns an object of class mcmcSampler (if one chain is run) or mcmcSamplerList. Both have the superclass bayesianOutput. It is possible to extract the samples as a coda object or matrix with \code{\link{getSample}}. Other S3 classes that are implemented include \code{\link{summary.mcmcSampler}} or \code{\link{summary.mcmcSamplerList}}, \code{\link{print.mcmcSampler}} or \code{\link{print.mcmcSamplerList}}, \code{\link{plot.mcmcSampler}} or \code{\link{plot.mcmcSamplerList}}
+#' 
+#' 
 #' It is also possible to summarize the posterior as a new prior via \code{\link{createPriorDensity}}.
 #' @example /inst/examples/mcmcRun.R
 #' @seealso \code{\link{createBayesianSetup}} 
@@ -39,7 +41,7 @@ runMCMC <- function(bayesianSetup , sampler = "DEzs", settings = NULL){
   
   ptm <- proc.time()  
  
-  ####### RESTART ########## 
+  ######## RESTART ########## 
   
   if("bayesianOutput" %in% class(bayesianSetup)){
     
@@ -263,7 +265,30 @@ runMCMC <- function(bayesianSetup , sampler = "DEzs", settings = NULL){
 #' @param settings optional list with parameters that will be used instead of the defaults
 #' @param sampler one of the samplers in \code{\link{runMCMC}} 
 #' @param check logical determines whether parameters should be checked for consistency
-#' @details see \code{\link{runMCMC}} 
+#' @details 
+#' 
+#' The following settings can be used for all MCMCs:
+#' 
+#' startValue (no default) start values for the MCMC. Note that DE family samplers require a matrix of #' start values. If startvalues are not provided, they are sampled from the prior.
+#' 
+#' iterations (10000) the MCMC iterations
+#' 
+#' burnin (0) burnin
+#' 
+#' thin (1) thinning while sampling
+#' 
+#' consoleUpdates (100) update frequency for console updates
+#' 
+#' parallel (NULL) whether parallelization is to be used
+#' 
+#' message (TRUE) if progress messages are to be printed
+#' 
+#' nrChains (1) the number of independent MCMC chains to be run. Note that this is not controlling the #' internal number of chains in population MCMCs such as DE, so if you run nrChains = 3 with a DEzs #' #' startValue that is a 4xparameter matrix (= 4 internal chains), you will run independent DEzs runs #' #' with 4 internal chains each.
+#' 
+#' For more details, see \code{\link{runMCMC}} 
+#' 
+#' 
+#' @example inst/examples/mcmcRun.R
 #' @export
 applySettingsDefault<-function(settings=NULL, sampler = "DEzs", check = FALSE){
   

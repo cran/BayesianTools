@@ -14,7 +14,8 @@ runMCMC(bayesianSetup, sampler = "DEzs", settings = NULL)
 \item{settings}{list with settings for each sampler. If a setting is not provided, defaults (see \code{\link{applySettingsDefault}}) will be used.}
 }
 \value{
-The function returns an object of class mcmcSampler (if one chain is run) or mcmcSamplerList. Both have the superclass bayesianOutput. It is possible to extract the samples as a coda object or matrix with \code{\link{getSample}}.
+The function returns an object of class mcmcSampler (if one chain is run) or mcmcSamplerList. Both have the superclass bayesianOutput. It is possible to extract the samples as a coda object or matrix with \code{\link{getSample}}. Other S3 classes that are implemented include \code{\link{summary.mcmcSampler}} or \code{\link{summary.mcmcSamplerList}}, \code{\link{print.mcmcSampler}} or \code{\link{print.mcmcSamplerList}}, \code{\link{plot.mcmcSampler}} or \code{\link{plot.mcmcSamplerList}}
+
 It is also possible to summarize the posterior as a new prior via \code{\link{createPriorDensity}}.
 }
 \description{
@@ -44,7 +45,7 @@ The MCMC samplers will have a number of additional settings, which are described
 
 Note that even if you specify parallel = T, this will only turn on internal parallelization of the samplers. The independent samplers controlled by nrChains are not evaluated in parallel, so if time is an issue it will be better to run the MCMCs individually and then combine them via \code{\link{createMcmcSamplerList}} into one joint object.
 
-Note that DE and DREAM variants as well as SMC and T-walk require a population to start, which should be provided as a matrix. Default (NULL) sets the population size for DE to 3 x dimensions of parameters, for DREAM to 2 x dimensions of parameters and for DEzs and DREAMzs to three, sampled from the prior. Note also that the zs variants of DE and DREAM require two populations, the current population and the z matrix (a kind of memory) - if you want to set both, provide a list with startvalue$X and startvalue$Z.
+Note that, DE and DREAM variants as well as SMC and T-walk require a population to start, which should be provided as a matrix. Default (NULL) sets the population size for DE to 3 x dimensions of parameters, for DREAM to 2 x dimensions of parameters and for DEzs and DREAMzs to three, sampled from the prior. Note also that the zs variants of DE and DREAM require two populations, the current population and the z matrix (a kind of memory) - if you want to set both, provide a list with startvalue$X and startvalue$Z.
 
 setting startValue for sampling with nrChains > 1 : if you want to provide different start values for the different chains, provide them as a list
 }
@@ -56,8 +57,9 @@ ll <- generateTestDensityMultiNormal(sigma = "no correlation")
 ## is the recommended way of using the runMCMC() function.
 bayesianSetup <- createBayesianSetup(likelihood = ll, lower = rep(-10, 3), upper = rep(10, 3))
 
-## Finally we can run the sampler and have a look
-settings = list(iterations = 1000, adapt = FALSE)
+## Finally we can run the sampler. To get possible settings
+## for a sampler, see help or run applySettingsDefault(sampler = "Metropolis")
+settings = list(iterations = 1000, adapt = FALSE) #
 out <- runMCMC(bayesianSetup = bayesianSetup, sampler = "Metropolis", settings = settings)
 
 ## out is of class bayesianOutput. There are various standard functions 
@@ -72,6 +74,8 @@ summary(out)
 # for plotting and analysis
 
 codaObject = getSample(out, start = 500, coda = TRUE)
+
+
 }
 \seealso{
 \code{\link{createBayesianSetup}}

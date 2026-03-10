@@ -1,5 +1,5 @@
-# Functions for class mcmcSamper
-
+# Functions for class mcmcSampler
+#' @rdname getSample
 #' @author Florian Hartig
 #' @export
 getSample.mcmcSampler <- function(sampler, parametersOnly = T, coda = F, start = 1, end = NULL, thin = 1, numSamples = NULL, whichParameters = NULL, reportDiagnostics= F, ...){
@@ -113,10 +113,18 @@ getSample.mcmcSampler <- function(sampler, parametersOnly = T, coda = F, start =
 
 
 
+#' Summmary of MCMC output
+#' @description
+#' Creates a summary table of a MCMC output
+#' @param object object of class mcmcSampler or mcmcSamplerList
+#' @param printCorrelation if set to TRUE, prints correlation among samples
+#' @param ... not implemented  
 #' @method summary mcmcSampler
 #' @author Stefan Paul
 #' @export
-summary.mcmcSampler <- function(object, ...){
+#' @seealso \code{\link{getSample.mcmcSampler}}
+summary.mcmcSampler <- function(object, printCorrelation = "auto", ...){
+
   #codaChain = getSample(sampler, parametersOnly = parametersOnly, coda = T, ...)
   #summary(codaChain)
   #rejectionRate(sampler$codaChain)
@@ -133,8 +141,7 @@ summary.mcmcSampler <- function(object, ...){
   
   mcmcsampler <- sampler$settings$sampler
   runtime <- sampler$settings$runtime[3]
-  correlations <- round(cor(getSample(sampler)),3)
-  
+
   chain <- getSample(sampler, parametersOnly = T, coda = T, ...)
   # chain <- getSample(sampler, parametersOnly = T, coda = T)
   if("mcmc.list" %in% class(chain)){
@@ -203,13 +210,21 @@ summary.mcmcSampler <- function(object, ...){
   
   try(cat("## DIC: ", round(DInf$DIC,3), "\n"), silent = TRUE)
   cat("## Convergence" ,"\n", "Gelman Rubin multivariate psrf: ", conv, "\n","\n")
-  cat("## Correlations", "\n")
-  print(correlations)
+  if(printCorrelation == TRUE){
+    correlations <- round(cor(getSample(sampler)),3)
+    cat("## Correlations", "\n")
+    print(correlations)    
+  }
 }
 
-#' @author Florian Hartig
+#' Prints MCMC output
+#' @description
+#' Prints MCMC output
+#' @param x object of class mcmcSampler or mcmcSamplerList
+#' @param ... additional options 
 #' @method print mcmcSampler
 #' @export
+#' @seealso \code{\link{getSample.mcmcSampler}}
 print.mcmcSampler <- function(x, ...){
   print("mcmcSampler - you can use the following methods to summarize, plot or reduce this class:")
   print(methods(class ="mcmcSampler"))
@@ -218,9 +233,17 @@ print.mcmcSampler <- function(x, ...){
   #effectiveSize(sampler$codaChain)
 }
 
-#' @author Florian Hartig
+
+
+#' Plots of MCMC output
+#' @description
+#' Plots MCMC output
+#' @param x object of class mcmcSampler or mcmcSamplerList
+#' @param ... additional options passed to tracePlot
 #' @method plot mcmcSampler
+#' @author Florian Hartig
 #' @export
+#' @seealso \code{\link{getSample.mcmcSampler}}
 plot.mcmcSampler <- function(x, ...){
   tracePlot(x, ...)
 }

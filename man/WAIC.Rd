@@ -34,7 +34,7 @@ Method 2 is defined as,
 where  \eqn{V_{s=1}^{S}} is the sample variance.
 }
 \note{
-The function requires that the likelihood passed on to BayesianSetup contains the option sum = T/F, with defaul F. If set to true, the likelihood for each data point must be returned.
+The function requires that the likelihood passed on to BayesianSetup contains the option sum = T/F, with default F. If set to true, the likelihood for each data point must be returned.
 }
 \examples{
 bayesianSetup <- createBayesianSetup(likelihood = testDensityNormal, 
@@ -54,7 +54,7 @@ out = runMCMC(bayesianSetup = bayesianSetup)
 WAIC(out)
 }
 \references{
-Gelman, Andrew and Jessica Hwang and Aki Vehtari (2013), "Understanding Predictive Information Criteria for Bayesian Models," \url{http://www.stat.columbia.edu/~gelman/research/unpublished/waic_understand_final.pdf}.
+Gelman, Andrew and Jessica Hwang and Aki Vehtari (2013), "Understanding Predictive Information Criteria for Bayesian Models," \doi{10.48550/arXiv.1307.5928}.
 
 Watanabe, S. (2010). "Asymptotic Equivalence of Bayes Cross Validation and Widely Applicable Information Criterion in Singular Learning Theory", Journal of Machine Learning Research, \url{https://www.jmlr.org/papers/v11/watanabe10a.html}.
 }
